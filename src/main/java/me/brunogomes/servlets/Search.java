@@ -34,7 +34,7 @@ public class Search extends HttpServlet {
 		PrintWriter writer =  resp.getWriter();
 		
 		writer.println("<html><body>");
-		writer.println(productDao.all().toString());
+		writer.println(productDao.findAll().toString());
 		writer.println("</html></body>");
 		
 	}

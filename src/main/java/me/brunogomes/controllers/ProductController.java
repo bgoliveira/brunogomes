@@ -3,10 +3,6 @@ package me.brunogomes.controllers;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
-import me.brunogomes.daos.CategoryDao;
-import me.brunogomes.daos.ProductDao;
-import me.brunogomes.models.Product;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -14,6 +10,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+
+import me.brunogomes.daos.CategoryDao;
+import me.brunogomes.daos.ProductDao;
+import me.brunogomes.models.Product;
 
 @Controller
 @RequestMapping("/products")
@@ -55,7 +55,7 @@ public class ProductController
    public ModelAndView load(@PathVariable("id") Integer id)
    {
       ModelAndView modelAndView = new ModelAndView("products/form-update");
-      modelAndView.addObject("product", productDao.findById(id));
+      modelAndView.addObject("product", productDao.findOne(id));
       loadFormDependencies(modelAndView);
       return modelAndView;
    }
@@ -64,7 +64,7 @@ public class ProductController
    public ModelAndView list()
    {
       ModelAndView modelAndView = new ModelAndView("products/list");
-      modelAndView.addObject("list", productDao.all());
+      modelAndView.addObject("list", productDao.findAll());
       return modelAndView;
    }
 
@@ -72,8 +72,8 @@ public class ProductController
    @RequestMapping(method = RequestMethod.GET, value = "/remove/{id}")
    public String remove(@PathVariable("id") Integer id)
    {
-      Product product = productDao.findById(id);
-      productDao.remove(product);
+      Product product = productDao.findOne(id);
+      productDao.delete(product);
       return "redirect:/products";
    }
 
@@ -85,7 +85,7 @@ public class ProductController
       {
          return loadFormDependencies(new ModelAndView("products/form-update"));
       }
-      productDao.update(product);
+      productDao.save(product);
       return new ModelAndView("redirect:/products");
    }
 }
